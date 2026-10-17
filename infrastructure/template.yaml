@@ -1,0 +1,443 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Cloud-Based Disaster Management Platform - Full AWS Serverless Infrastructure
+  (Cognito, API Gateway, Lambda, DynamoDB, S3, SNS, CloudWatch)
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: nodejs20.x
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        USE_AWS: 'true'
+        NODE_OPTIONS: '--enable-source-maps'
+        INCIDENTS_TABLE: !Ref IncidentsTable
+        SOS_TABLE: !Ref SOSTable
+        RESCUE_TEAMS_TABLE: !Ref RescueTeamsTable
+        SHELTERS_TABLE: !Ref SheltersTable
+        RESOURCES_TABLE: !Ref ResourcesTable
+        ALERTS_TABLE: !Ref AlertsTable
+        DISASTER_S3_BUCKET: !Ref MediaStorageBucket
+        DISASTER_SNS_TOPIC_ARN: !Ref EmergencyAlertsTopic
+
+Resources:
+  # =========================================================================
+  # 1. COGNITO AUTHENTICATION & ACCESS CONTROL
+  # =========================================================================
+  DisasterCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: disaster-management-user-pool
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: true
+
+  DisasterCognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: disaster-management-web-client
+      UserPoolId: !Ref DisasterCognitoUserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+
+  CognitoGroupCitizen:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: CITIZEN
+      Description: Public citizens who can submit reports and request SOS
+      UserPoolId: !Ref DisasterCognitoUserPool
+
+  CognitoGroupAuthority:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: AUTHORITY
+      Description: Disaster response authorities managing incidents and alerts
+      UserPoolId: !Ref DisasterCognitoUserPool
+
+  CognitoGroupRescueTeam:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: RESCUE_TEAM
+      Description: First responders handling field deployments
+      UserPoolId: !Ref DisasterCognitoUserPool
+
+  CognitoGroupAdmin:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: ADMIN
+      Description: System administrators managing user roles and configuration
+      UserPoolId: !Ref DisasterCognitoUserPool
+
+  # =========================================================================
+  # 2. AMAZON S3 FILE STORAGE (PRIVATE BUCKET WITH CORS)
+  # =========================================================================
+  MediaStorageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'disaster-media-${AWS::AccountId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT, POST, HEAD]
+            AllowedOrigins: ['*']
+            MaxAge: 3600
+
+  # =========================================================================
+  # 3. AMAZON SNS EMERGENCY BROADCAST TOPIC
+  # =========================================================================
+  EmergencyAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: disaster-emergency-alerts-topic
+      DisplayName: Disaster Emergency Alerts Broadcast
+
+  # =========================================================================
+  # 4. AMAZON DYNAMODB PERSISTENCE LAYER
+  # =========================================================================
+  IncidentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: disaster_incidents
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: incidentId
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+      KeySchema:
+        - AttributeName: incidentId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  SOSTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: disaster_sos
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: sosId
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sosId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: SOSStatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  RescueTeamsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: disaster_rescue_teams
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: teamId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: teamId
+          KeyType: HASH
+
+  SheltersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: disaster_shelters
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: shelterId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: shelterId
+          KeyType: HASH
+
+  ResourcesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: disaster_resources
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: resourceId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: resourceId
+          KeyType: HASH
+
+  AlertsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: disaster_alerts
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: alertId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: alertId
+          KeyType: HASH
+
+  # =========================================================================
+  # 5. AMAZON API GATEWAY REST API
+  # =========================================================================
+  DisasterApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-user-role,x-user-id,x-user-email,x-user-name'"
+        AllowOrigin: "'*'"
+
+  # =========================================================================
+  # 6. AWS LAMBDA COMPUTE FUNCTIONS
+  # =========================================================================
+  IncidentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/incidents.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref IncidentsTable
+      Events:
+        GetIncidents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /incidents
+            Method: GET
+        CreateIncident:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /incidents
+            Method: POST
+        GetIncidentById:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /incidents/{id}
+            Method: GET
+        UpdateIncident:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /incidents/{id}
+            Method: PUT
+
+  SOSFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/sos.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SOSTable
+      Events:
+        GetSOS:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /sos
+            Method: GET
+        CreateSOS:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /sos
+            Method: POST
+        UpdateSOS:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /sos/{id}
+            Method: PUT
+
+  RescueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/rescue.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref RescueTeamsTable
+      Events:
+        GetTeams:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /rescue/teams
+            Method: GET
+        CreateTeam:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /rescue/teams
+            Method: POST
+        UpdateTeam:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /rescue/teams/{id}
+            Method: PUT
+
+  SheltersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/shelters.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SheltersTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ResourcesTable
+      Events:
+        GetShelters:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /shelters
+            Method: GET
+        CreateShelter:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /shelters
+            Method: POST
+        UpdateShelter:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /shelters/{id}
+            Method: PUT
+        GetResources:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /resources
+            Method: GET
+        CreateResource:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /resources
+            Method: POST
+
+  AlertsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/alerts.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AlertsTable
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt EmergencyAlertsTopic.TopicName
+      Events:
+        GetAlerts:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /alerts
+            Method: GET
+        CreateAlert:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /alerts
+            Method: POST
+
+  StatsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/stats.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref IncidentsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref SOSTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref RescueTeamsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref SheltersTable
+      Events:
+        GetStats:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /stats
+            Method: GET
+
+  UploadsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: dist/handlers/uploads.handler
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref MediaStorageBucket
+      Events:
+        PresignUpload:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DisasterApi
+            Path: /uploads/presign
+            Method: POST
+
+Outputs:
+  DisasterApiEndpoint:
+    Description: Production API Gateway endpoint URL
+    Value: !Sub 'https://${DisasterApi}.execute-api.${AWS::Region}.amazonaws.com/prod/'
+  CognitoUserPoolId:
+    Description: Cognito User Pool ID
+    Value: !Ref DisasterCognitoUserPool
+  CognitoUserPoolClientId:
+    Description: Cognito User Pool Client ID
+    Value: !Ref DisasterCognitoUserPoolClient
+  S3MediaBucketName:
+    Description: S3 Media Storage Bucket Name
+    Value: !Ref MediaStorageBucket
+  SNSTopicArn:
+    Description: Emergency Alerts SNS Topic ARN
+    Value: !Ref EmergencyAlertsTopic
