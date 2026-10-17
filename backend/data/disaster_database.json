@@ -1,0 +1,230 @@
+{
+  "disaster_incidents": {
+    "inc-001": {
+      "incidentId": "inc-001",
+      "title": "Severe Flash Flooding & River Embankment Breach",
+      "description": "Heavy precipitation caused river embankment failure. Flood waters reaching ground floors of residential buildings. Around 40 residents stranded.",
+      "category": "Flood",
+      "severity": "Critical",
+      "status": "In Progress",
+      "locationName": "North Delta Sector 3, Riverbank Road",
+      "latitude": 19.0825,
+      "longitude": 72.889,
+      "reporterName": "Aarav Sharma",
+      "reporterContact": "+91 98200 11223",
+      "assignedTeamId": "team-charlie-03",
+      "assignedTeamName": "Charlie Flood & Water Rescue",
+      "mediaUrls": [
+        "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=600&q=80"
+      ],
+      "createdAt": "2026-10-17T05:00:00.000Z",
+      "updatedAt": "2026-10-17T06:30:00.000Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-17T05:00:00.000Z",
+          "action": "Reported",
+          "actor": "Aarav Sharma (Citizen)",
+          "notes": "Initial emergency incident reported with photo attachments."
+        },
+        {
+          "timestamp": "2026-10-17T05:45:00.000Z",
+          "action": "Verified & Escalated to Critical",
+          "actor": "Command Control (Authority)",
+          "notes": "Verified by aerial surveillance."
+        },
+        {
+          "timestamp": "2026-10-17T06:30:00.000Z",
+          "action": "Assigned to Charlie Flood & Water Rescue",
+          "actor": "Dispatch HQ (Authority)",
+          "notes": "Rescue boats deployed to scene."
+        }
+      ]
+    },
+    "inc-002": {
+      "incidentId": "inc-002",
+      "title": "Commercial Chemical Warehouse Blaze",
+      "description": "Electrical short circuit triggered industrial warehouse fire with dense toxic smoke plumes spreading toward nearby residential sectors.",
+      "category": "Fire",
+      "severity": "High",
+      "status": "Verified",
+      "locationName": "West Industrial Estate, Bay 14",
+      "latitude": 19.113,
+      "longitude": 72.869,
+      "reporterName": "Meera Patel",
+      "reporterContact": "+91 98111 22334",
+      "assignedTeamId": "team-bravo-02",
+      "assignedTeamName": "Bravo Urban Search & Rescue",
+      "mediaUrls": [
+        "https://images.unsplash.com/photo-1579208575657-c595a05383b7?auto=format&fit=crop&w=600&q=80"
+      ],
+      "createdAt": "2026-10-17T04:15:00.000Z",
+      "updatedAt": "2026-10-17T06:00:00.000Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-17T04:15:00.000Z",
+          "action": "Reported",
+          "actor": "Meera Patel (Citizen)",
+          "notes": "Thick black smoke detected in chemical storage zone."
+        }
+      ]
+    },
+    "inc-003": {
+      "incidentId": "inc-003",
+      "title": "Earthquake Tremor & Structural Masonry Cracks",
+      "description": "Magnitude 5.2 seismic tremor reported. Two older commercial complexes exhibiting significant wall fissures. Perimeter cordoned off.",
+      "category": "Earthquake",
+      "severity": "Medium",
+      "status": "Under Review",
+      "locationName": "Heritage Market Square, Block B",
+      "latitude": 19.055,
+      "longitude": 72.84,
+      "reporterName": "Karan Verma",
+      "reporterContact": "+91 97654 32100",
+      "mediaUrls": [],
+      "createdAt": "2026-10-17T03:00:00.000Z",
+      "updatedAt": "2026-10-17T03:00:00.000Z"
+    }
+  },
+  "disaster_sos": {
+    "sos-911-01": {
+      "sosId": "sos-911-01",
+      "requesterName": "Pooja Deshmukh",
+      "requesterPhone": "+91 99300 44556",
+      "emergencyType": "Trapped on 2nd Floor Balcony - Rapid Water Influx",
+      "urgency": "Critical",
+      "status": "Responding",
+      "latitude": 19.081,
+      "longitude": 72.888,
+      "locationDescription": "Building 4, Sector 3, near Sun Temple",
+      "peopleCount": 4,
+      "assignedTeamId": "team-charlie-03",
+      "assignedTeamName": "Charlie Flood & Water Rescue",
+      "notes": "2 elderly citizens requiring stretcher assistance.",
+      "createdAt": "2026-10-17T06:45:00.000Z",
+      "updatedAt": "2026-10-17T07:15:00.000Z"
+    }
+  },
+  "disaster_rescue_teams": {
+    "team-alpha-01": {
+      "teamId": "team-alpha-01",
+      "name": "Alpha Rapid Medical Unit",
+      "specialization": "Medical",
+      "contactPhone": "+91 98200 99001",
+      "currentStatus": "Available",
+      "baseLocation": "Central Emergency Hospital Trauma Wing",
+      "membersCount": 8,
+      "lastUpdated": "2026-10-17T07:00:00.000Z"
+    },
+    "team-bravo-02": {
+      "teamId": "team-bravo-02",
+      "name": "Bravo Urban Search & Rescue",
+      "specialization": "Search & Rescue",
+      "contactPhone": "+91 98200 99002",
+      "currentStatus": "Dispatched",
+      "assignedIncidentId": "inc-002",
+      "baseLocation": "District Fire Station 4",
+      "membersCount": 12,
+      "lastUpdated": "2026-10-17T07:00:00.000Z"
+    },
+    "team-charlie-03": {
+      "teamId": "team-charlie-03",
+      "name": "Charlie Flood & Water Rescue",
+      "specialization": "Water Rescue",
+      "contactPhone": "+91 98200 99003",
+      "currentStatus": "On Scene",
+      "assignedIncidentId": "inc-001",
+      "assignedSOSId": "sos-911-01",
+      "baseLocation": "Coastal Harbor Depot",
+      "membersCount": 10,
+      "lastUpdated": "2026-10-17T07:00:00.000Z"
+    }
+  },
+  "disaster_shelters": {
+    "shelter-01": {
+      "shelterId": "shelter-01",
+      "name": "Metro City Sports Arena Emergency Shelter",
+      "address": "100 Stadium Way, Civil Lines",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "capacity": 600,
+      "currentOccupancy": 210,
+      "status": "Open",
+      "contactPerson": "Director Sarah Adams",
+      "contactPhone": "+91 22 2456 7890",
+      "facilities": [
+        "Medical Dispensary",
+        "Emergency Kitchen",
+        "Power Generators",
+        "Sanitation Blocks"
+      ],
+      "updatedAt": "2026-10-17T07:00:00.000Z"
+    },
+    "shelter-02": {
+      "shelterId": "shelter-02",
+      "name": "Hilltop High School Community Refuge",
+      "address": "45 Ridge View Road, Elevated Sector",
+      "latitude": 19.125,
+      "longitude": 72.86,
+      "capacity": 350,
+      "currentOccupancy": 140,
+      "status": "Open",
+      "contactPerson": "Principal David Miller",
+      "contactPhone": "+91 22 2890 1234",
+      "facilities": [
+        "Clean Potable Water",
+        "Blankets",
+        "Infant Care Station"
+      ],
+      "updatedAt": "2026-10-17T07:00:00.000Z"
+    }
+  },
+  "disaster_resources": {
+    "res-01": {
+      "resourceId": "res-01",
+      "name": "Emergency Trauma Medical Kits",
+      "category": "Medical",
+      "quantity": 320,
+      "unit": "kits",
+      "storageLocation": "Central Emergency Depot Bay 3",
+      "status": "Available",
+      "updatedAt": "2026-10-17T07:00:00.000Z"
+    },
+    "res-02": {
+      "resourceId": "res-02",
+      "name": "High-Volume Water Purification Pouches",
+      "category": "Food & Water",
+      "quantity": 8500,
+      "unit": "liters",
+      "storageLocation": "Northern Relief Depot",
+      "status": "Available",
+      "updatedAt": "2026-10-17T07:00:00.000Z"
+    },
+    "res-03": {
+      "resourceId": "res-03",
+      "name": "Inflatable Rescue Boats & Outboard Motors",
+      "category": "Rescue Equipment",
+      "quantity": 18,
+      "unit": "boats",
+      "storageLocation": "Harbor Rescue Depot",
+      "status": "Available",
+      "updatedAt": "2026-10-17T07:00:00.000Z"
+    }
+  },
+  "disaster_alerts": {
+    "alert-001": {
+      "alertId": "alert-001",
+      "title": "RED ALERT: Severe Flash Floods & High Tide Advisory",
+      "severity": "Critical",
+      "affectedRegions": [
+        "North Delta Sector 3",
+        "Riverbank Corridor",
+        "Low-Lying Coastal Roads"
+      ],
+      "instructions": "Evacuate ground level premises immediately. Do not attempt to cross flooded roadways. Proceed to Metro Sports Arena Shelter.",
+      "issuedBy": "Disaster Management Authority",
+      "issuedAt": "2026-10-17T05:30:00.000Z",
+      "active": true,
+      "snsMessageId": "sns-arn-disaster-broadcast-001"
+    }
+  }
+}

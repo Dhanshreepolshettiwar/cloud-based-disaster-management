@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
@@ -25,14 +27,31 @@ if (isAwsLive) {
   });
 }
 
-// Memory cache for local testing / offline emulation
-const inMemoryStore: Record<string, Map<string, any>> = {};
+// Persistent Disk Database for Local Server execution
+const DATA_FILE = path.resolve(__dirname, '../../data/disaster_database.json');
 
-function getStore(tableName: string): Map<string, any> {
-  if (!inMemoryStore[tableName]) {
-    inMemoryStore[tableName] = new Map();
+function loadDiskStore(): Record<string, Record<string, any>> {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      const content = fs.readFileSync(DATA_FILE, 'utf-8');
+      return JSON.parse(content);
+    }
+  } catch (e) {
+    console.warn('Could not read disk store, initializing new store:', e);
   }
-  return inMemoryStore[tableName];
+  return {};
+}
+
+function saveDiskStore(store: Record<string, Record<string, any>>): void {
+  try {
+    const dir = path.dirname(DATA_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2), 'utf-8');
+  } catch (e) {
+    console.warn('Failed to save to disk store:', e);
+  }
 }
 
 export const dynamoService = {
@@ -47,10 +66,11 @@ export const dynamoService = {
       return (result.Item as T) || null;
     }
 
-    // Local in-memory emulation
+    // Local persistent disk storage
+    const store = loadDiskStore();
+    const tableData = store[tableName] || {};
     const keyVal = Object.values(key).join('#');
-    const store = getStore(tableName);
-    return (store.get(keyVal) as T) || null;
+    return (tableData[keyVal] as T) || null;
   },
 
   async putItem<T extends Record<string, any>>(tableName: string, item: T, keyField: string = 'id'): Promise<T> {
@@ -60,9 +80,14 @@ export const dynamoService = {
       return item;
     }
 
+    const store = loadDiskStore();
+    if (!store[tableName]) {
+      store[tableName] = {};
+    }
+
     const keyVal = item[keyField] || Object.values(item)[0];
-    const store = getStore(tableName);
-    store.set(String(keyVal), { ...item });
+    store[tableName][String(keyVal)] = { ...item };
+    saveDiskStore(store);
     return item;
   },
 
@@ -77,8 +102,9 @@ export const dynamoService = {
       return (result.Items as T[]) || [];
     }
 
-    const store = getStore(tableName);
-    return Array.from(store.values()) as T[];
+    const store = loadDiskStore();
+    const tableData = store[tableName] || {};
+    return Object.values(tableData) as T[];
   },
 
   async queryItems<T>(
@@ -98,10 +124,9 @@ export const dynamoService = {
       return (result.Items as T[]) || [];
     }
 
-    // Local fallback: filter by expression values
-    const store = getStore(tableName);
-    const all = Array.from(store.values()) as T[];
-    return all;
+    const store = loadDiskStore();
+    const tableData = store[tableName] || {};
+    return Object.values(tableData) as T[];
   },
 
   async deleteItem(tableName: string, key: Record<string, any>): Promise<boolean> {
@@ -111,8 +136,13 @@ export const dynamoService = {
       return true;
     }
 
-    const keyVal = Object.values(key).join('#');
-    const store = getStore(tableName);
-    return store.delete(keyVal);
+    const store = loadDiskStore();
+    if (store[tableName]) {
+      const keyVal = Object.values(key).join('#');
+      delete store[tableName][keyVal];
+      saveDiskStore(store);
+      return true;
+    }
+    return false;
   },
 };
