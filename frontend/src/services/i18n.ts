@@ -1,4 +1,172 @@
-import { Language } from '../types';
+import { Language, DisasterCategory, SeverityLevel, IncidentStatus, Incident } from '../types';
+
+export const categoryTranslations: Record<Language, Record<string, string>> = {
+  en: {
+    Waterlogging: 'Waterlogging',
+    Flood: 'Flood',
+    Cyclone: 'Cyclone',
+    Landslide: 'Landslide',
+    'Building Collapse': 'Building Collapse',
+    Fire: 'Fire',
+    'Industrial Hazard': 'Industrial Hazard',
+    Heatwave: 'Heatwave',
+    'Other Emergency': 'Other Emergency',
+  },
+  mr: {
+    Waterlogging: 'पाणी साचणे',
+    Flood: 'पूर / पूरस्थिती',
+    Cyclone: 'चक्रीवादळ',
+    Landslide: 'दरड कोसळणे',
+    'Building Collapse': 'इमारत कोसळणे',
+    Fire: 'आग / वणवा',
+    'Industrial Hazard': 'औद्योगिक दुर्घटना',
+    Heatwave: 'उष्णतेची लाट',
+    'Other Emergency': 'इतर आणीबाणी',
+  },
+  hi: {
+    Waterlogging: 'जलभराव',
+    Flood: 'बाढ़ / सैलाब',
+    Cyclone: 'चक्रवात / तूफ़ान',
+    Landslide: 'भूस्खलन',
+    'Building Collapse': 'इमारत गिरना',
+    Fire: 'आग / अग्निकांड',
+    'Industrial Hazard': 'औद्योगिक खतरा',
+    Heatwave: 'भीषण लू',
+    'Other Emergency': 'अन्य आपातकाल',
+  },
+};
+
+export const severityTranslations: Record<Language, Record<string, string>> = {
+  en: {
+    Critical: 'Critical',
+    High: 'High',
+    Medium: 'Medium',
+    Low: 'Low',
+  },
+  mr: {
+    Critical: 'अति-गंभीर',
+    High: 'गंभीर / उच्च',
+    Medium: 'मध्यम',
+    Low: 'कमी / सौम्य',
+  },
+  hi: {
+    Critical: 'अति-गंभीर',
+    High: 'उच्च खतरा',
+    Medium: 'मध्यम',
+    Low: 'निम्न',
+  },
+};
+
+export const statusTranslations: Record<Language, Record<string, string>> = {
+  en: {
+    Reported: 'Reported',
+    'Under Verification': 'Under Verification',
+    Verified: 'Verified',
+    'Response Assigned': 'Team Dispatched',
+    'In Progress': 'In Progress',
+    Resolved: 'Resolved',
+  },
+  mr: {
+    Reported: 'नोंदणीकृत',
+    'Under Verification': 'पडताळणी सुरू',
+    Verified: 'सत्यापित / पुष्टी',
+    'Response Assigned': 'पथक रवाना',
+    'In Progress': 'बचाव कार्य सुरू',
+    Resolved: 'निवारण झाले',
+  },
+  hi: {
+    Reported: 'रिपोर्ट दर्ज',
+    'Under Verification': 'सत्यापन जारी',
+    Verified: 'सत्यापित',
+    'Response Assigned': 'दल रवाना',
+    'In Progress': 'राहत कार्य जारी',
+    Resolved: 'समाधान संपन्न',
+  },
+};
+
+// Regional incidents translation catalogue for scenario cards
+export const regionalIncidentI18n: Record<string, Record<Language, { title: string; description: string }>> = {
+  'INC-MH-BOM-001': {
+    en: {
+      title: 'Mithi River Overspill & Ground Floor Inundation (Kranti Nagar)',
+      description: 'Mithi River water level reached danger threshold (3.8m). Severe backflow inundating Kranti Nagar and Bail Bazar residential tenements. Approximately 60 families need immediate evacuation to higher floors.',
+    },
+    mr: {
+      title: 'मिठी नदी ओसंडून वाहिल्याने तळमजल्यांवर पाणी शिरले (क्रांती नगर)',
+      description: 'मिठी नदीच्या पाण्याची पातळी धोका पातळीवर (३.८ मीटर) पोहोचली. क्रांती नगर व बैल बाजार येथील घरांमध्ये पाणी शिरले असून ६० कुटुंबांना त्वरित सुरक्षित स्थळी हलवणे आवश्यक आहे.',
+    },
+    hi: {
+      title: 'मीठी नदी का जलस्तर खतरे के निशान पार, निचले इलाकों में पानी भरा (क्रांति नगर)',
+      description: 'मीठी नदी का जलस्तर 3.8 मीटर पहुंच गया। क्रांति नगर और बैल बाजार की बस्तियों में भारी जलभराव। 60 परिवारों को तुरंत सुरक्षित ऊंचाई पर स्थानांतरित करने की आवश्यकता।',
+    },
+  },
+  'INC-MH-BOM-002': {
+    en: {
+      title: 'Severe Waterlogging at Gandhi Market & Sion Circle (1.2m Depth)',
+      description: 'Submerged arterial road blocking public BEST buses and vehicular traffic towards Dadar. Power feeders temporarily isolated by BEST as a safety precaution.',
+    },
+    mr: {
+      title: 'गांधी मार्केट व सायन सर्कल येथे तीव्र पाणी साचले (१.२ मीटर खोली)',
+      description: 'दादरच्या दिशेने जाणारी मुख्य वाहतूक व बेस्ट बस मार्ग पाण्याखाली. खबरदारीचा उपाय म्हणून बेस्टकडून वीज पुरवठा तात्पुरता खंडित.',
+    },
+    hi: {
+      title: 'गांधी मार्केट व सायन सर्कल पर गंभीर जलभराव (1.2 मीटर गहराई)',
+      description: 'दादर की ओर जाने वाला मुख्य मार्ग और बेस्ट बस सेवा जलमग्न होने से बाधित। सुरक्षा हेतु बिजली सप्लाई बंद की गई।',
+    },
+  },
+  'INC-MH-BOM-003': {
+    en: {
+      title: 'Milan Subway Inundation & Trapped Delivery Van',
+      description: 'Underpass flooded with over 1.4 meters of stormwater due to high-tide drain lock. One delivery van stalled; driver safely assisted to footpath. Subway closed for traffic.',
+    },
+    mr: {
+      title: 'मिलन सबवेमध्ये पाणी साचून डिलिव्हरी व्हॅन अडकली',
+      description: 'उधाणामुळे पाण्याचा निचरा न झाल्याने सबवेमध्ये १.४ मीटरपेक्षा जास्त पाणी साचले. एका व्हॅनमधील चालकाला सुखरूप बाहेर काढले. सबवे वाहतुकीसाठी बंद.',
+    },
+    hi: {
+      title: 'मिलन सबवे जलमग्न, डिलीवरी वैन फंसी',
+      description: 'हाई-टाइड के चलते मिलन सबवे में 1.4 मीटर से अधिक बरसाती पानी भर गया। चालक को सुरक्षित निकाला गया, सबवे यातायात हेतु बंद।',
+    },
+  },
+  'INC-MH-BOM-004': {
+    en: {
+      title: 'Hindmata Flyover Under-Belly Water Ponding',
+      description: 'Pumping operations underway with 4 high-capacity pumps (3000 m3/hr). Water receding slowly as Arabian Sea high tide recedes.',
+    },
+    mr: {
+      title: 'हिंदमाता उड्डाणपुलाखाली पाण्याचा मोठा तलाव',
+      description: '४ हाय-कॅपॅसिटी पंपांच्या (३००० घनमीटर/तास) साहाय्याने पाणी उपसण्याचे काम युद्धपातळीवर सुरू. समुद्राची भरती ओसरल्याने पाणी हळूहळू कमी होत आहे.',
+    },
+    hi: {
+      title: 'हिंदमाता फ्लाईओवर के नीचे भारी जलभराव',
+      description: '4 हाई-कैपेसिटी पंपों की मदद से पानी निकालने का कार्य जारी। अरब सागर में ज्वार कम होने के साथ पानी धीरे-धीरे कम हो रहा है।',
+    },
+  },
+};
+
+export const getLocalizedIncident = (
+  incident: Incident,
+  lang: Language
+): {
+  title: string;
+  description: string;
+  category: string;
+  severity: string;
+  status: string;
+} => {
+  const custom = regionalIncidentI18n[incident.incidentId]?.[lang];
+  const cat = categoryTranslations[lang]?.[incident.category] || incident.category;
+  const sev = severityTranslations[lang]?.[incident.severity] || incident.severity;
+  const stat = statusTranslations[lang]?.[incident.status] || incident.status;
+
+  return {
+    title: custom ? custom.title : incident.title,
+    description: custom ? custom.description : incident.description,
+    category: cat,
+    severity: sev,
+    status: stat,
+  };
+};
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
@@ -36,6 +204,13 @@ export const translations: Record<Language, Record<string, string>> = {
     allSeverities: 'All Severities',
     allStatuses: 'All Statuses',
     searchPlaceholder: 'Search incidents by locality, title, or ID...',
+    mapLegend: 'Map Legend',
+    reliefShelter: 'Relief Shelter',
+    assignedTeam: 'Assigned Team',
+    sortTime: 'Time',
+    sortSeverity: 'Severity',
+    noIncidents: 'No incidents match current filter criteria.',
+    peopleRisk: 'people at risk',
     
     // Safety
     safetyTitle: 'Disaster Preparedness & Official Safety Guidelines',
@@ -88,6 +263,13 @@ export const translations: Record<Language, Record<string, string>> = {
     allSeverities: 'सर्व तीव्रता',
     allStatuses: 'सर्व स्थिती',
     searchPlaceholder: 'परिसर, शीर्षक किंवा आयडीने शोधा...',
+    mapLegend: 'नकाशा सूची',
+    reliefShelter: 'मदत निवारा',
+    assignedTeam: 'नेमलेले पथक',
+    sortTime: 'वेळ',
+    sortSeverity: 'तीव्रता',
+    noIncidents: 'निवडलेल्या निकषांनुसार कोणतीही घटना आढळली नाही.',
+    peopleRisk: 'बाधित नागरिक',
     
     // Safety
     safetyTitle: 'आपत्ती पूर्वतयारी आणि अधिकृत सुरक्षा मार्गदर्शक तत्त्वे',
@@ -140,6 +322,13 @@ export const translations: Record<Language, Record<string, string>> = {
     allSeverities: 'सभी गंभीरता स्तर',
     allStatuses: 'सभी स्थितियां',
     searchPlaceholder: 'स्थान, शीर्षक या आईडी द्वारा खोजें...',
+    mapLegend: 'मानचित्र संकेत',
+    reliefShelter: 'राहत शिविर',
+    assignedTeam: 'तैनात बचाव दल',
+    sortTime: 'समय',
+    sortSeverity: 'गंभीरता',
+    noIncidents: 'चुने गए फ़िल्टर के अनुसार कोई घटना नहीं मिली।',
+    peopleRisk: 'लोग प्रभावित',
     
     // Safety
     safetyTitle: 'आपदा तैयारी एवं आधिकारिक सुरक्षा निर्देश',
