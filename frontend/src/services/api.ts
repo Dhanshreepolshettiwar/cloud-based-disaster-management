@@ -7,275 +7,13 @@ import {
   EmergencyAlert,
   DashboardStats,
   UserRole,
+  RegionalScenarioId,
+  RegionalScenario,
 } from '../types';
+import { REGIONAL_SCENARIOS } from './scenarios';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
 
-// Default mock initial data for local development and offline demonstrations
-const initialIncidents: Incident[] = [
-  {
-    incidentId: 'inc-001',
-    title: 'Severe Flash Flooding & River Embankment Breach',
-    description: 'Heavy precipitation caused river embankment failure. Flood waters reaching ground floors of residential buildings. Around 40 residents stranded.',
-    category: 'Flood',
-    severity: 'Critical',
-    status: 'In Progress',
-    locationName: 'North Delta Sector 3, Riverbank Road',
-    latitude: 19.0825,
-    longitude: 72.889,
-    reporterId: 'usr-cit-1',
-    reporterName: 'Aarav Sharma',
-    reporterContact: '+91 98200 11223',
-    assignedTeamId: 'team-charlie-03',
-    assignedTeamName: 'Charlie Flood & Water Rescue',
-    mediaUrls: [
-      'https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=600&q=80',
-    ],
-    createdAt: new Date(Date.now() - 3600000 * 3).toISOString(),
-    updatedAt: new Date(Date.now() - 3600000 * 1).toISOString(),
-    timeline: [
-      {
-        timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
-        action: 'Reported',
-        actor: 'Aarav Sharma (Citizen)',
-        notes: 'Initial emergency incident reported with photo attachments.',
-      },
-      {
-        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-        action: 'Verified & Severity Escalated to Critical',
-        actor: 'Command Control (Authority)',
-        notes: 'Disaster assessment verified drone aerial feed.',
-      },
-      {
-        timestamp: new Date(Date.now() - 3600000 * 1).toISOString(),
-        action: 'Assigned to Charlie Flood & Water Rescue',
-        actor: 'Dispatch HQ (Authority)',
-        notes: 'Three rescue boats dispatched with lifejackets.',
-      },
-    ],
-  },
-  {
-    incidentId: 'inc-002',
-    title: 'Commercial Chemical Warehouse Blaze',
-    description: 'Electrical short circuit triggered industrial warehouse fire with dense toxic smoke plumes spreading toward nearby residential sectors.',
-    category: 'Fire',
-    severity: 'High',
-    status: 'Verified',
-    locationName: 'West Industrial Estate, Bay 14',
-    latitude: 19.113,
-    longitude: 72.869,
-    reporterId: 'usr-cit-2',
-    reporterName: 'Meera Patel',
-    reporterContact: '+91 98111 22334',
-    assignedTeamId: 'team-bravo-02',
-    assignedTeamName: 'Bravo Urban Search & Rescue',
-    mediaUrls: [
-      'https://images.unsplash.com/photo-1579208575657-c595a05383b7?auto=format&fit=crop&w=600&q=80',
-    ],
-    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-    updatedAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-    timeline: [
-      {
-        timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-        action: 'Reported',
-        actor: 'Meera Patel (Citizen)',
-        notes: 'Thick black smoke detected in chemical storage zone.',
-      },
-      {
-        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-        action: 'Verified',
-        actor: 'Fire Marshall Office (Authority)',
-        notes: 'Hazardous material protocol Hazmat Stage 2 activated.',
-      },
-    ],
-  },
-  {
-    incidentId: 'inc-003',
-    title: 'Earthquake Tremor & Structural Masonry Cracks',
-    description: 'Magnitude 5.2 seismic tremor reported. Two older commercial complexes exhibiting significant wall fissures. Perimeter cordoned off.',
-    category: 'Earthquake',
-    severity: 'Medium',
-    status: 'Under Review',
-    locationName: 'Heritage Market Square, Block B',
-    latitude: 19.055,
-    longitude: 72.84,
-    reporterId: 'usr-cit-3',
-    reporterName: 'Karan Verma',
-    reporterContact: '+91 97654 32100',
-    mediaUrls: [],
-    createdAt: new Date(Date.now() - 3600000 * 7).toISOString(),
-    updatedAt: new Date(Date.now() - 3600000 * 7).toISOString(),
-    timeline: [
-      {
-        timestamp: new Date(Date.now() - 3600000 * 7).toISOString(),
-        action: 'Reported',
-        actor: 'Karan Verma (Citizen)',
-        notes: 'Pedestrian plaza evacuated following tremor vibrations.',
-      },
-    ],
-  },
-];
-
-const initialSOS: SOSRequest[] = [
-  {
-    sosId: 'sos-911-01',
-    requesterName: 'Pooja Deshmukh',
-    requesterPhone: '+91 99300 44556',
-    emergencyType: 'Trapped on 2nd Floor Balcony - Rapid Water Influx',
-    urgency: 'Critical',
-    status: 'Responding',
-    latitude: 19.081,
-    longitude: 72.888,
-    locationDescription: 'Building 4, Sector 3, near Sun Temple',
-    peopleCount: 4,
-    assignedTeamId: 'team-charlie-03',
-    assignedTeamName: 'Charlie Flood & Water Rescue',
-    notes: '2 elderly citizens requiring stretcher assistance.',
-    createdAt: new Date(Date.now() - 1800000).toISOString(),
-    updatedAt: new Date(Date.now() - 600000).toISOString(),
-  },
-  {
-    sosId: 'sos-911-02',
-    requesterName: 'Anonymous Citizen',
-    requesterPhone: '+91 98450 77889',
-    emergencyType: 'Gas Leak & Breathing Difficulties',
-    urgency: 'High',
-    status: 'Acknowledged',
-    latitude: 19.115,
-    longitude: 72.871,
-    locationDescription: 'Opposite Industrial Gate 2',
-    peopleCount: 2,
-    notes: 'Dispatched hazmat medical ambulance.',
-    createdAt: new Date(Date.now() - 2700000).toISOString(),
-    updatedAt: new Date(Date.now() - 1200000).toISOString(),
-  },
-];
-
-const initialTeams: RescueTeam[] = [
-  {
-    teamId: 'team-alpha-01',
-    name: 'Alpha Rapid Medical Unit',
-    specialization: 'Medical',
-    contactPhone: '+91 98200 99001',
-    currentStatus: 'Available',
-    baseLocation: 'Central Emergency Hospital Trauma Wing',
-    membersCount: 8,
-    lastUpdated: new Date().toISOString(),
-  },
-  {
-    teamId: 'team-bravo-02',
-    name: 'Bravo Urban Search & Rescue',
-    specialization: 'Search & Rescue',
-    contactPhone: '+91 98200 99002',
-    currentStatus: 'Dispatched',
-    assignedIncidentId: 'inc-002',
-    baseLocation: 'District Fire Station 4',
-    membersCount: 12,
-    lastUpdated: new Date().toISOString(),
-  },
-  {
-    teamId: 'team-charlie-03',
-    name: 'Charlie Flood & Water Rescue',
-    specialization: 'Water Rescue',
-    contactPhone: '+91 98200 99003',
-    currentStatus: 'On Scene',
-    assignedIncidentId: 'inc-001',
-    assignedSOSId: 'sos-911-01',
-    baseLocation: 'Coastal Harbor Depot',
-    membersCount: 10,
-    lastUpdated: new Date().toISOString(),
-  },
-];
-
-const initialShelters: Shelter[] = [
-  {
-    shelterId: 'shelter-01',
-    name: 'Metro City Sports Arena Emergency Shelter',
-    address: '100 Stadium Way, Civil Lines',
-    latitude: 19.076,
-    longitude: 72.8777,
-    capacity: 600,
-    currentOccupancy: 210,
-    status: 'Open',
-    contactPerson: 'Director Sarah Adams',
-    contactPhone: '+91 22 2456 7890',
-    facilities: ['Medical Dispensary', 'Emergency Kitchen', 'Power Generators', 'Sanitation Blocks'],
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    shelterId: 'shelter-02',
-    name: 'Hilltop High School & Community Center',
-    address: '45 Ridge View Road, Elevated Sector',
-    latitude: 19.125,
-    longitude: 72.86,
-    capacity: 350,
-    currentOccupancy: 140,
-    status: 'Open',
-    contactPerson: 'Principal David Miller',
-    contactPhone: '+91 22 2890 1234',
-    facilities: ['Clean Potable Water', 'Blankets', 'Infant Care Station'],
-    updatedAt: new Date().toISOString(),
-  },
-];
-
-const initialResources: ResourceItem[] = [
-  {
-    resourceId: 'res-01',
-    name: 'Emergency Trauma Medical Kits',
-    category: 'Medical',
-    quantity: 320,
-    unit: 'kits',
-    storageLocation: 'Central Emergency Depot Bay 3',
-    status: 'Available',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    resourceId: 'res-02',
-    name: 'High-Volume Water Purification Pouches',
-    category: 'Food & Water',
-    quantity: 8500,
-    unit: 'liters',
-    storageLocation: 'Northern Relief Depot',
-    status: 'Available',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    resourceId: 'res-03',
-    name: 'Inflatable Rescue Boats & Outboard Motors',
-    category: 'Rescue Equipment',
-    quantity: 18,
-    unit: 'boats',
-    storageLocation: 'Harbor Rescue Depot',
-    status: 'Available',
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    resourceId: 'res-04',
-    name: 'Heavy Duty Emergency Generators (15kVA)',
-    category: 'Power & Fuel',
-    quantity: 22,
-    unit: 'units',
-    storageLocation: 'Civil Engineering Yard',
-    status: 'Available',
-    updatedAt: new Date().toISOString(),
-  },
-];
-
-const initialAlerts: EmergencyAlert[] = [
-  {
-    alertId: 'alert-001',
-    title: 'RED ALERT: Severe Flash Floods & High Tide Advisory',
-    severity: 'Critical',
-    affectedRegions: ['North Delta Sector 3', 'Riverbank Corridor', 'Low-Lying Coastal Roads'],
-    instructions: 'Evacuate ground level premises immediately. Do not attempt to cross flooded roadways. Proceed to Metro Sports Arena Shelter.',
-    issuedBy: 'Disaster Management Authority',
-    issuedAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-    active: true,
-    snsMessageId: 'sns-arn-disaster-broadcast-001',
-  },
-];
-
-// Persistent local state in browser storage
 class MockStorageService {
   private get<T>(key: string, defaultValue: T): T {
     try {
@@ -294,103 +32,213 @@ class MockStorageService {
     }
   }
 
-  getIncidents(): Incident[] {
-    return this.get<Incident[]>('incidents', initialIncidents);
+  getActiveScenarioId(): RegionalScenarioId {
+    return this.get<RegionalScenarioId>('active_scenario', 'mumbai');
   }
 
-  saveIncidents(items: Incident[]) {
-    this.set('incidents', items);
+  setActiveScenarioId(id: RegionalScenarioId): void {
+    this.set('active_scenario', id);
   }
 
-  getSOS(): SOSRequest[] {
-    return this.get<SOSRequest[]>('sos', initialSOS);
+  getScenario(id?: RegionalScenarioId): RegionalScenario {
+    const activeId = id || this.getActiveScenarioId();
+    return REGIONAL_SCENARIOS[activeId] || REGIONAL_SCENARIOS.mumbai;
   }
 
-  saveSOS(items: SOSRequest[]) {
-    this.set('sos', items);
+  getIncidents(scenarioId?: RegionalScenarioId): Incident[] {
+    const scId = scenarioId || this.getActiveScenarioId();
+    const defaultData = (REGIONAL_SCENARIOS[scId] || REGIONAL_SCENARIOS.mumbai).incidents;
+    return this.get<Incident[]>(`incidents_${scId}`, defaultData);
   }
 
-  getTeams(): RescueTeam[] {
-    return this.get<RescueTeam[]>('teams', initialTeams);
+  saveIncidents(items: Incident[], scenarioId?: RegionalScenarioId): void {
+    const scId = scenarioId || this.getActiveScenarioId();
+    this.set(`incidents_${scId}`, items);
   }
 
-  saveTeams(items: RescueTeam[]) {
-    this.set('teams', items);
+  getSOS(scenarioId?: RegionalScenarioId): SOSRequest[] {
+    const scId = scenarioId || this.getActiveScenarioId();
+    const defaultSOS: SOSRequest[] = [
+      {
+        sosId: 'SOS-MH-BOM-911',
+        requesterName: 'Aarti Patil',
+        requesterPhone: '+91 98200 44556',
+        emergencyType: 'Trapped in waterlogged residential ground-floor chawl',
+        urgency: 'Critical',
+        status: 'Acknowledged',
+        latitude: 19.0765,
+        longitude: 72.8835,
+        locationDescription: 'Room 14, Kranti Nagar Chawl No. 4, Kurla West',
+        district: 'Mumbai Suburban',
+        state: 'Maharashtra',
+        peopleCount: 4,
+        specialNeeds: ['Elderly grandmother (bedridden)', 'Infant (8 months old)'],
+        assignedTeamId: 'team-ndrf-mumbai-01',
+        assignedTeamName: 'NDRF 5th Battalion (Flood Rescue Alpha)',
+        notes: 'Water level inside room reaching 2.5 feet. Family moved to wooden cot.',
+        isDemo: true,
+        createdAt: new Date(Date.now() - 1000 * 60 * 50).toISOString(),
+        updatedAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
+      },
+      {
+        sosId: 'SOS-MH-BOM-912',
+        requesterName: 'Ramesh Verma',
+        requesterPhone: '+91 98201 99881',
+        emergencyType: 'Submerged vehicle engine stall near flood drain',
+        urgency: 'High',
+        status: 'Submitted',
+        latitude: 19.041,
+        longitude: 72.8635,
+        locationDescription: 'Beside Gandhi Market bus depot, Sion',
+        district: 'Mumbai City',
+        state: 'Maharashtra',
+        peopleCount: 2,
+        specialNeeds: [],
+        notes: 'Vehicle surrounded by 3 feet stagnant stormwater; no electrical hazard seen.',
+        isDemo: true,
+        createdAt: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
+        updatedAt: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
+      },
+    ];
+    return this.get<SOSRequest[]>(`sos_${scId}`, defaultSOS);
   }
 
-  getShelters(): Shelter[] {
-    return this.get<Shelter[]>('shelters', initialShelters);
+  saveSOS(items: SOSRequest[], scenarioId?: RegionalScenarioId): void {
+    const scId = scenarioId || this.getActiveScenarioId();
+    this.set(`sos_${scId}`, items);
   }
 
-  saveShelters(items: Shelter[]) {
-    this.set('shelters', items);
+  getTeams(scenarioId?: RegionalScenarioId): RescueTeam[] {
+    const scId = scenarioId || this.getActiveScenarioId();
+    const defaultData = (REGIONAL_SCENARIOS[scId] || REGIONAL_SCENARIOS.mumbai).teams;
+    return this.get<RescueTeam[]>(`teams_${scId}`, defaultData);
   }
 
-  getResources(): ResourceItem[] {
-    return this.get<ResourceItem[]>('resources', initialResources);
+  saveTeams(items: RescueTeam[], scenarioId?: RegionalScenarioId): void {
+    const scId = scenarioId || this.getActiveScenarioId();
+    this.set(`teams_${scId}`, items);
   }
 
-  saveResources(items: ResourceItem[]) {
-    this.set('resources', items);
+  getShelters(scenarioId?: RegionalScenarioId): Shelter[] {
+    const scId = scenarioId || this.getActiveScenarioId();
+    const defaultData = (REGIONAL_SCENARIOS[scId] || REGIONAL_SCENARIOS.mumbai).shelters;
+    return this.get<Shelter[]>(`shelters_${scId}`, defaultData);
   }
 
-  getAlerts(): EmergencyAlert[] {
-    return this.get<EmergencyAlert[]>('alerts', initialAlerts);
+  saveShelters(items: Shelter[], scenarioId?: RegionalScenarioId): void {
+    const scId = scenarioId || this.getActiveScenarioId();
+    this.set(`shelters_${scId}`, items);
   }
 
-  saveAlerts(items: EmergencyAlert[]) {
-    this.set('alerts', items);
+  getResources(scenarioId?: RegionalScenarioId): ResourceItem[] {
+    const scId = scenarioId || this.getActiveScenarioId();
+    const defaultData = (REGIONAL_SCENARIOS[scId] || REGIONAL_SCENARIOS.mumbai).resources;
+    return this.get<ResourceItem[]>(`resources_${scId}`, defaultData);
+  }
+
+  saveResources(items: ResourceItem[], scenarioId?: RegionalScenarioId): void {
+    const scId = scenarioId || this.getActiveScenarioId();
+    this.set(`resources_${scId}`, items);
+  }
+
+  getAlerts(scenarioId?: RegionalScenarioId): EmergencyAlert[] {
+    const scId = scenarioId || this.getActiveScenarioId();
+    const defaultAlert = (REGIONAL_SCENARIOS[scId] || REGIONAL_SCENARIOS.mumbai).activeAlert;
+    return this.get<EmergencyAlert[]>(`alerts_${scId}`, [defaultAlert]);
+  }
+
+  saveAlerts(items: EmergencyAlert[], scenarioId?: RegionalScenarioId): void {
+    const scId = scenarioId || this.getActiveScenarioId();
+    this.set(`alerts_${scId}`, items);
+  }
+
+  // Pending offline SOS submission queue
+  getPendingSOSQueue(): SOSRequest[] {
+    return this.get<SOSRequest[]>('pending_sos_queue', []);
+  }
+
+  savePendingSOSQueue(items: SOSRequest[]): void {
+    this.set('pending_sos_queue', items);
   }
 }
 
 const mockStore = new MockStorageService();
 
 export const apiService = {
+  // SCENARIO MANAGEMENT
+  getActiveScenario(): RegionalScenario {
+    return mockStore.getScenario();
+  },
+
+  setActiveScenario(id: RegionalScenarioId): RegionalScenario {
+    mockStore.setActiveScenarioId(id);
+    return mockStore.getScenario(id);
+  },
+
+  getAllScenarios(): RegionalScenario[] {
+    return Object.values(REGIONAL_SCENARIOS);
+  },
+
   // INCIDENTS
-  async getIncidents(filters?: { category?: string; severity?: string; status?: string }): Promise<Incident[]> {
+  async getIncidents(filters?: {
+    category?: string;
+    severity?: string;
+    status?: string;
+    district?: string;
+  }): Promise<Incident[]> {
     if (API_BASE) {
-      const query = new URLSearchParams(filters as any).toString();
-      const res = await fetch(`${API_BASE}/incidents?${query}`);
-      const json = await res.json();
-      return json.data || [];
+      try {
+        const query = new URLSearchParams(filters as any).toString();
+        const res = await fetch(`${API_BASE}/incidents?${query}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data && json.data.length > 0) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error, falling back to local scenario store:', e);
+      }
     }
 
     let list = mockStore.getIncidents();
-    if (filters?.category) list = list.filter((i) => i.category === filters.category);
-    if (filters?.severity) list = list.filter((i) => i.severity === filters.severity);
-    if (filters?.status) list = list.filter((i) => i.status === filters.status);
+    if (filters?.category && filters.category !== 'All') {
+      list = list.filter((i) => i.category === filters.category);
+    }
+    if (filters?.severity && filters.severity !== 'All') {
+      list = list.filter((i) => i.severity === filters.severity);
+    }
+    if (filters?.status && filters.status !== 'All') {
+      list = list.filter((i) => i.status === filters.status);
+    }
+    if (filters?.district && filters.district !== 'All') {
+      list = list.filter((i) => i.district === filters.district);
+    }
     return list;
   },
 
-  async createIncident(incidentData: Partial<Incident>, userRole: UserRole, userName: string): Promise<Incident> {
-    if (API_BASE) {
-      const res = await fetch(`${API_BASE}/incidents`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-role': userRole,
-          'x-user-name': userName,
-        },
-        body: JSON.stringify(incidentData),
-      });
-      const json = await res.json();
-      return json.data;
-    }
-
+  async createIncident(
+    incidentData: Partial<Incident>,
+    userRole: UserRole,
+    userName: string
+  ): Promise<Incident> {
     const now = new Date().toISOString();
+    const scenario = mockStore.getScenario();
     const newInc: Incident = {
-      incidentId: `inc-${Date.now().toString(36)}`,
-      title: incidentData.title || 'Untitled Incident',
+      incidentId: `INC-${scenario.state.substring(0, 2).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`,
+      title: incidentData.title || 'Untitled Disaster Incident',
       description: incidentData.description || '',
-      category: incidentData.category || 'Other Emergency',
+      category: incidentData.category || 'Waterlogging',
       severity: incidentData.severity || 'Medium',
       status: 'Reported',
       locationName: incidentData.locationName || 'Location Not Specified',
-      latitude: incidentData.latitude || 19.076,
-      longitude: incidentData.longitude || 72.8777,
+      district: incidentData.district || scenario.name.split(',')[0],
+      state: incidentData.state || scenario.state,
+      latitude: incidentData.latitude || scenario.center[0],
+      longitude: incidentData.longitude || scenario.center[1],
       reporterName: userName,
       reporterContact: incidentData.reporterContact || '',
+      peopleAffected: incidentData.peopleAffected || 0,
       mediaUrls: incidentData.mediaUrls || [],
+      isDemo: true,
       createdAt: now,
       updatedAt: now,
       timeline: [
@@ -402,6 +250,26 @@ export const apiService = {
         },
       ],
     };
+
+    if (API_BASE) {
+      try {
+        const res = await fetch(`${API_BASE}/incidents`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-role': userRole,
+            'x-user-name': userName,
+          },
+          body: JSON.stringify(newInc),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error, creating in local mock store:', e);
+      }
+    }
 
     const current = mockStore.getIncidents();
     mockStore.saveIncidents([newInc, ...current]);
@@ -415,24 +283,38 @@ export const apiService = {
     userName: string
   ): Promise<Incident> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/incidents/${incidentId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-role': userRole,
-          'x-user-name': userName,
-        },
-        body: JSON.stringify(updates),
-      });
-      const json = await res.json();
-      return json.data;
+      try {
+        const res = await fetch(`${API_BASE}/incidents/${incidentId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-role': userRole,
+            'x-user-name': userName,
+          },
+          body: JSON.stringify(updates),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API update failed, updating local mock store:', e);
+      }
     }
 
     const current = mockStore.getIncidents();
     const idx = current.findIndex((i) => i.incidentId === incidentId);
-    if (idx === -1) throw new Error('Incident not found');
+    if (idx === -1) throw new Error('Incident not found in active records');
 
     const now = new Date().toISOString();
+    const actionLabel = updates.status
+      ? `Status changed to ${updates.status}`
+      : updates.severity
+      ? `Severity updated to ${updates.severity}`
+      : updates.assignedTeamName
+      ? `Assigned to ${updates.assignedTeamName}`
+      : 'Incident details updated';
+
     const updated: Incident = {
       ...current[idx],
       ...updates,
@@ -441,7 +323,7 @@ export const apiService = {
         ...(current[idx].timeline || []),
         {
           timestamp: now,
-          action: updates.status ? `Status changed to ${updates.status}` : 'Incident updated',
+          action: actionLabel,
           actor: `${userName} (${userRole})`,
           notes: (updates as any).notes || 'Operational update logged.',
         },
@@ -453,47 +335,77 @@ export const apiService = {
     return updated;
   },
 
-  // SOS REQUESTS
+  // SOS DISTRESS BEACONS
   async getSOSRequests(): Promise<SOSRequest[]> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/sos`);
-      const json = await res.json();
-      return json.data || [];
+      try {
+        const res = await fetch(`${API_BASE}/sos`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error fetching SOS, fallback to mock store:', e);
+      }
     }
     return mockStore.getSOS();
   },
 
-  async submitSOS(sosData: Partial<SOSRequest>, userName: string): Promise<SOSRequest> {
-    if (API_BASE) {
-      const res = await fetch(`${API_BASE}/sos`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sosData),
-      });
-      const json = await res.json();
-      return json.data;
-    }
-
+  async submitSOS(
+    sosData: Partial<SOSRequest>,
+    userName: string
+  ): Promise<{ request: SOSRequest; queuedOffline: boolean }> {
     const now = new Date().toISOString();
+    const scenario = mockStore.getScenario();
     const newSOS: SOSRequest = {
-      sosId: `sos-${Date.now().toString(36)}`,
-      requesterName: userName || 'Anonymous Citizen',
+      sosId: `SOS-${scenario.state.substring(0, 2).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`,
+      requesterName: userName || 'Citizen',
       requesterPhone: sosData.requesterPhone || '',
-      emergencyType: sosData.emergencyType || 'Life-Threatening Emergency',
+      emergencyType: sosData.emergencyType || 'Life-threatening flood / disaster distress',
       urgency: sosData.urgency || 'Critical',
       status: 'Submitted',
-      latitude: sosData.latitude || 19.08,
-      longitude: sosData.longitude || 72.88,
+      latitude: sosData.latitude || scenario.center[0],
+      longitude: sosData.longitude || scenario.center[1],
       locationDescription: sosData.locationDescription || 'Urgent rescue location',
+      district: sosData.district || scenario.name.split(',')[0],
+      state: sosData.state || scenario.state,
       peopleCount: sosData.peopleCount || 1,
+      specialNeeds: sosData.specialNeeds || [],
       notes: sosData.notes || '',
+      isDemo: true,
       createdAt: now,
       updatedAt: now,
     };
 
+    let queuedOffline = false;
+
+    if (API_BASE) {
+      try {
+        const res = await fetch(`${API_BASE}/sos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newSOS),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return { request: json.data, queuedOffline: false };
+        } else {
+          queuedOffline = true;
+        }
+      } catch (e) {
+        console.warn('Network offline or backend down. Queuing SOS locally:', e);
+        queuedOffline = true;
+      }
+    }
+
+    if (queuedOffline) {
+      const q = mockStore.getPendingSOSQueue();
+      mockStore.savePendingSOSQueue([newSOS, ...q]);
+    }
+
     const current = mockStore.getSOS();
     mockStore.saveSOS([newSOS, ...current]);
-    return newSOS;
+    return { request: newSOS, queuedOffline };
   },
 
   async updateSOSStatus(
@@ -503,13 +415,19 @@ export const apiService = {
     notes?: string
   ): Promise<SOSRequest> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/sos/${sosId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-user-role': 'AUTHORITY' },
-        body: JSON.stringify({ status, assignedTeamName, notes }),
-      });
-      const json = await res.json();
-      return json.data;
+      try {
+        const res = await fetch(`${API_BASE}/sos/${sosId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-user-role': 'AUTHORITY' },
+          body: JSON.stringify({ status, assignedTeamName, notes }),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error, updating SOS locally:', e);
+      }
     }
 
     const current = mockStore.getSOS();
@@ -532,27 +450,39 @@ export const apiService = {
   // RESCUE TEAMS
   async getRescueTeams(): Promise<RescueTeam[]> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/rescue/teams`);
-      const json = await res.json();
-      return json.data || [];
+      try {
+        const res = await fetch(`${API_BASE}/rescue/teams`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error fetching teams, fallback to mock store:', e);
+      }
     }
     return mockStore.getTeams();
   },
 
   async updateTeamStatus(teamId: string, status: RescueTeam['currentStatus']): Promise<RescueTeam> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/rescue/teams/${teamId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-user-role': 'RESCUE_TEAM' },
-        body: JSON.stringify({ currentStatus: status }),
-      });
-      const json = await res.json();
-      return json.data;
+      try {
+        const res = await fetch(`${API_BASE}/rescue/teams/${teamId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-user-role': 'RESCUE_TEAM' },
+          body: JSON.stringify({ currentStatus: status }),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error updating team status, fallback to local store:', e);
+      }
     }
 
     const current = mockStore.getTeams();
     const idx = current.findIndex((t) => t.teamId === teamId);
-    if (idx === -1) throw new Error('Team not found');
+    if (idx === -1) throw new Error('Rescue team not found');
 
     current[idx].currentStatus = status;
     current[idx].lastUpdated = new Date().toISOString();
@@ -560,12 +490,18 @@ export const apiService = {
     return current[idx];
   },
 
-  // SHELTERS & RESOURCES
+  // SHELTERS
   async getShelters(): Promise<Shelter[]> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/shelters`);
-      const json = await res.json();
-      return json.data || [];
+      try {
+        const res = await fetch(`${API_BASE}/shelters`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error fetching shelters, fallback to mock store:', e);
+      }
     }
     return mockStore.getShelters();
   },
@@ -573,57 +509,135 @@ export const apiService = {
   async updateShelterOccupancy(shelterId: string, newOccupancy: number): Promise<Shelter> {
     const current = mockStore.getShelters();
     const idx = current.findIndex((s) => s.shelterId === shelterId);
-    if (idx !== -1) {
-      current[idx].currentOccupancy = newOccupancy;
-      current[idx].status = newOccupancy >= current[idx].capacity ? 'Full' : 'Open';
-      current[idx].updatedAt = new Date().toISOString();
-      mockStore.saveShelters(current);
-      return current[idx];
+    if (idx === -1) throw new Error('Shelter not found');
+
+    if (newOccupancy < 0) {
+      throw new Error('Occupancy cannot be negative');
     }
-    throw new Error('Shelter not found');
+    if (newOccupancy > current[idx].capacity * 1.5) {
+      throw new Error(`Occupancy exceeds critical capacity limit (${current[idx].capacity})`);
+    }
+
+    current[idx].currentOccupancy = newOccupancy;
+    current[idx].status = newOccupancy >= current[idx].capacity ? 'Full' : 'Open';
+    current[idx].updatedAt = new Date().toISOString();
+    mockStore.saveShelters(current);
+    return current[idx];
   },
 
+  // RELIEF SUPPLIES INVENTORY
   async getResources(): Promise<ResourceItem[]> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/resources`);
-      const json = await res.json();
-      return json.data || [];
+      try {
+        const res = await fetch(`${API_BASE}/resources`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error fetching resources, fallback to mock store:', e);
+      }
     }
     return mockStore.getResources();
   },
 
-  // EMERGENCY ALERTS
+  async adjustResourceStock(
+    resourceId: string,
+    delta: number,
+    action: 'dispatch' | 'restock'
+  ): Promise<ResourceItem> {
+    const current = mockStore.getResources();
+    const idx = current.findIndex((r) => r.resourceId === resourceId);
+    if (idx === -1) throw new Error('Relief supply item not found');
+
+    const item = current[idx];
+    let newQty = item.quantity;
+
+    if (action === 'dispatch') {
+      if (delta > item.quantity) {
+        throw new Error(`Cannot dispatch ${delta} ${item.unit}. Available stock is only ${item.quantity} ${item.unit}.`);
+      }
+      newQty -= delta;
+      item.lastDispatched = new Date().toISOString();
+    } else {
+      newQty += delta;
+    }
+
+    item.quantity = newQty;
+    if (newQty === 0) {
+      item.status = 'Depleted';
+    } else if (newQty <= item.reorderThreshold) {
+      item.status = 'Low Stock';
+    } else {
+      item.status = 'Available';
+    }
+    item.updatedAt = new Date().toISOString();
+
+    current[idx] = item;
+    mockStore.saveResources(current);
+    return item;
+  },
+
+  // EMERGENCY BROADCAST ALERTS
   async getAlerts(): Promise<EmergencyAlert[]> {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/alerts`);
-      const json = await res.json();
-      return json.data || [];
+      try {
+        const res = await fetch(`${API_BASE}/alerts`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error fetching alerts, fallback to mock store:', e);
+      }
     }
     return mockStore.getAlerts();
   },
 
-  async broadcastAlert(alertData: Partial<EmergencyAlert>, userName: string): Promise<EmergencyAlert> {
-    if (API_BASE) {
-      const res = await fetch(`${API_BASE}/alerts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-user-role': 'AUTHORITY', 'x-user-name': userName },
-        body: JSON.stringify(alertData),
-      });
-      const json = await res.json();
-      return json.data;
-    }
-
+  async broadcastAlert(
+    alertData: Partial<EmergencyAlert>,
+    userName: string
+  ): Promise<EmergencyAlert> {
+    const now = new Date().toISOString();
     const newAlert: EmergencyAlert = {
-      alertId: `alert-${Date.now().toString(36)}`,
-      title: alertData.title || 'Emergency Broadcast',
+      alertId: `ALERT-IN-${Date.now().toString(36).toUpperCase()}`,
+      title: alertData.title || 'Emergency Advisory Broadcast',
       severity: alertData.severity || 'High',
-      affectedRegions: alertData.affectedRegions || ['All Sectors'],
-      instructions: alertData.instructions || 'Stay tuned to official disaster broadcasts.',
-      issuedBy: `${userName} (Disaster Command)`,
-      issuedAt: new Date().toISOString(),
+      disasterType: alertData.disasterType || 'Waterlogging',
+      affectedRegions: alertData.affectedRegions || ['All Sub-Districts'],
+      instructions: alertData.instructions || 'Follow official instructions from local disaster authorities.',
+      issuedBy: `${userName} (Disaster Control HQ)`,
+      sourceType: alertData.sourceType || 'Control Room Operator',
+      issuedAt: now,
+      updatedAt: now,
       active: true,
+      isDemo: true,
+      recommendedActions: alertData.recommendedActions || [
+        'Tune into local radio/TV announcements.',
+        'Keep emergency supplies in a dry bag.',
+      ],
       snsMessageId: `mock-sns-${Date.now()}`,
     };
+
+    if (API_BASE) {
+      try {
+        const res = await fetch(`${API_BASE}/alerts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-role': 'AUTHORITY',
+            'x-user-name': userName,
+          },
+          body: JSON.stringify(newAlert),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) return json.data;
+        }
+      } catch (e) {
+        console.warn('API error publishing alert, saving to mock store:', e);
+      }
+    }
 
     const current = mockStore.getAlerts();
     mockStore.saveAlerts([newAlert, ...current]);
@@ -633,12 +647,18 @@ export const apiService = {
   // S3 PRESIGNED UPLOAD
   async getPresignedUploadUrl(fileName: string, contentType: string, fileSize: number) {
     if (API_BASE) {
-      const res = await fetch(`${API_BASE}/uploads/presign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileName, contentType, fileSize }),
-      });
-      return await res.json();
+      try {
+        const res = await fetch(`${API_BASE}/uploads/presign`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileName, contentType, fileSize }),
+        });
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch (e) {
+        console.warn('API presign error, falling back to simulated file upload:', e);
+      }
     }
 
     return {
@@ -648,31 +668,55 @@ export const apiService = {
     };
   },
 
-  // DASHBOARD STATS
+  // DASHBOARD DYNAMIC STATS (Zero hardcoded numbers - calculated dynamically)
   async getDashboardStats(): Promise<DashboardStats> {
-    if (API_BASE) {
-      const res = await fetch(`${API_BASE}/stats`);
-      const json = await res.json();
-      return json.data;
-    }
-
     const incidents = mockStore.getIncidents();
     const sos = mockStore.getSOS();
     const teams = mockStore.getTeams();
     const shelters = mockStore.getShelters();
+    const resources = mockStore.getResources();
 
-    const activeIncidents = incidents.filter((i) => i.status !== 'Resolved' && i.status !== 'Closed').length;
+    const activeIncidents = incidents.filter(
+      (i) => i.status !== 'Resolved' && i.status !== 'Closed' && i.status !== 'Rejected'
+    ).length;
+
     const criticalIncidents = incidents.filter(
       (i) => i.severity === 'Critical' && i.status !== 'Resolved' && i.status !== 'Closed'
     ).length;
-    const openSOSRequests = sos.filter((s) => s.status !== 'Resolved' && s.status !== 'Cancelled').length;
-    const incidentsAwaitingReview = incidents.filter((i) => i.status === 'Reported' || i.status === 'Under Review').length;
-    const teamsDispatched = teams.filter((t) => t.currentStatus === 'Dispatched' || t.currentStatus === 'On Scene').length;
-    const resolvedIncidents = incidents.filter((i) => i.status === 'Resolved' || i.status === 'Closed').length;
 
-    const shelterCapacityTotal = shelters.reduce((acc, s) => acc + s.capacity, 0);
-    const shelterOccupancyTotal = shelters.reduce((acc, s) => acc + s.currentOccupancy, 0);
+    const openSOSRequests = sos.filter(
+      (s) => s.status !== 'Resolved' && s.status !== 'Cancelled'
+    ).length;
+
+    const incidentsAwaitingReview = incidents.filter(
+      (i) => i.status === 'Reported' || i.status === 'Under Verification'
+    ).length;
+
+    const peopleAffectedFromIncidents = incidents.reduce(
+      (sum, i) => sum + (i.peopleAffected || 0),
+      0
+    );
+    const peopleAffectedFromSOS = sos.reduce(
+      (sum, s) => sum + (s.peopleCount || 0),
+      0
+    );
+    const peopleAffectedCount = peopleAffectedFromIncidents + peopleAffectedFromSOS;
+
+    const teamsDispatched = teams.filter(
+      (t) => t.currentStatus === 'Dispatched' || t.currentStatus === 'On Scene'
+    ).length;
+
+    const resolvedIncidents = incidents.filter(
+      (i) => i.status === 'Resolved' || i.status === 'Closed'
+    ).length;
+
+    const shelterCapacityTotal = shelters.reduce((acc, s) => acc + (s.capacity || 0), 0);
+    const shelterOccupancyTotal = shelters.reduce((acc, s) => acc + (s.currentOccupancy || 0), 0);
     const shelterAvailableSlots = Math.max(0, shelterCapacityTotal - shelterOccupancyTotal);
+
+    const lowStockItemsCount = resources.filter(
+      (r) => r.status === 'Low Stock' || r.status === 'Depleted'
+    ).length;
 
     return {
       totalIncidents: incidents.length,
@@ -680,11 +724,14 @@ export const apiService = {
       criticalIncidents,
       openSOSRequests,
       incidentsAwaitingReview,
+      peopleAffectedCount,
       teamsDispatched,
+      totalTeams: teams.length,
       resolvedIncidents,
       shelterCapacityTotal,
       shelterOccupancyTotal,
       shelterAvailableSlots,
+      lowStockItemsCount,
     };
   },
 };

@@ -95,7 +95,7 @@ describe('Disaster Management Backend Handlers Test Suite', () => {
     const alertRes = await alertsHandler({
       httpMethod: 'POST',
       body: JSON.stringify({
-        title: 'Tsunami Warning for Coastal Strip',
+        title: 'Monsoon High Tide Inundation Alert for Coastal Strip',
         severity: 'Critical',
         affectedRegions: ['Sector A', 'Sector B'],
         instructions: 'Immediate evacuation inland to elevated ground.',

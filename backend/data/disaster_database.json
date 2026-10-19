@@ -83,6 +83,156 @@
       "mediaUrls": [],
       "createdAt": "2026-10-17T03:00:00.000Z",
       "updatedAt": "2026-10-17T03:00:00.000Z"
+    },
+    "fe5ff4d8-38c4-4e13-8afc-ca3d84f2a12f": {
+      "incidentId": "fe5ff4d8-38c4-4e13-8afc-ca3d84f2a12f",
+      "title": "Severe River Flash Flood",
+      "description": "Water rising near east bridge, 50 households evacuated",
+      "category": "Flood",
+      "severity": "High",
+      "status": "Reported",
+      "locationName": "East Bridge Delta",
+      "latitude": 19.076,
+      "longitude": 72.877,
+      "reporterId": "user-123",
+      "reporterName": "John Citizen",
+      "reporterContact": "guest@example.com",
+      "mediaUrls": [],
+      "createdAt": "2026-10-18T20:23:51.522Z",
+      "updatedAt": "2026-10-18T20:23:51.522Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-18T20:23:51.522Z",
+          "action": "Reported",
+          "actor": "John Citizen",
+          "notes": "Initial incident report submitted."
+        }
+      ]
+    },
+    "e4af02b1-1c10-49fa-a7be-f8149222a76b": {
+      "incidentId": "e4af02b1-1c10-49fa-a7be-f8149222a76b",
+      "title": "Severe River Flash Flood",
+      "description": "Water rising near east bridge, 50 households evacuated",
+      "category": "Flood",
+      "severity": "High",
+      "status": "Reported",
+      "locationName": "East Bridge Delta",
+      "latitude": 19.076,
+      "longitude": 72.877,
+      "reporterId": "user-123",
+      "reporterName": "John Citizen",
+      "reporterContact": "guest@example.com",
+      "mediaUrls": [],
+      "createdAt": "2026-10-18T20:38:22.437Z",
+      "updatedAt": "2026-10-18T20:38:22.437Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-18T20:38:22.437Z",
+          "action": "Reported",
+          "actor": "John Citizen",
+          "notes": "Initial incident report submitted."
+        }
+      ]
+    },
+    "a99b8895-1067-4803-84da-bd1074971fb1": {
+      "incidentId": "a99b8895-1067-4803-84da-bd1074971fb1",
+      "title": "Severe River Flash Flood",
+      "description": "Water rising near east bridge, 50 households evacuated",
+      "category": "Flood",
+      "severity": "High",
+      "status": "Reported",
+      "locationName": "East Bridge Delta",
+      "latitude": 19.076,
+      "longitude": 72.877,
+      "reporterId": "user-123",
+      "reporterName": "John Citizen",
+      "reporterContact": "guest@example.com",
+      "mediaUrls": [],
+      "createdAt": "2026-10-18T20:45:41.123Z",
+      "updatedAt": "2026-10-18T20:45:41.123Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-18T20:45:41.123Z",
+          "action": "Reported",
+          "actor": "John Citizen",
+          "notes": "Initial incident report submitted."
+        }
+      ]
+    },
+    "1b9689ec-ec13-4e36-a2d4-618a9d34a6f6": {
+      "incidentId": "1b9689ec-ec13-4e36-a2d4-618a9d34a6f6",
+      "title": "Severe River Flash Flood",
+      "description": "Water rising near east bridge, 50 households evacuated",
+      "category": "Flood",
+      "severity": "High",
+      "status": "Reported",
+      "locationName": "East Bridge Delta",
+      "latitude": 19.076,
+      "longitude": 72.877,
+      "reporterId": "user-123",
+      "reporterName": "John Citizen",
+      "reporterContact": "guest@example.com",
+      "mediaUrls": [],
+      "createdAt": "2026-10-18T20:46:25.971Z",
+      "updatedAt": "2026-10-18T20:46:25.971Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-18T20:46:25.971Z",
+          "action": "Reported",
+          "actor": "John Citizen",
+          "notes": "Initial incident report submitted."
+        }
+      ]
+    },
+    "3949f9e3-03cf-4c93-8c5c-e72598c5e546": {
+      "incidentId": "3949f9e3-03cf-4c93-8c5c-e72598c5e546",
+      "title": "Severe River Flash Flood",
+      "description": "Water rising near east bridge, 50 households evacuated",
+      "category": "Flood",
+      "severity": "High",
+      "status": "Reported",
+      "locationName": "East Bridge Delta",
+      "latitude": 19.076,
+      "longitude": 72.877,
+      "reporterId": "user-123",
+      "reporterName": "John Citizen",
+      "reporterContact": "guest@example.com",
+      "mediaUrls": [],
+      "createdAt": "2026-10-18T20:54:39.443Z",
+      "updatedAt": "2026-10-18T20:54:39.443Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-18T20:54:39.443Z",
+          "action": "Reported",
+          "actor": "John Citizen",
+          "notes": "Initial incident report submitted."
+        }
+      ]
+    },
+    "70455c42-9f53-4a4d-a8cc-ec4be14d8075": {
+      "incidentId": "70455c42-9f53-4a4d-a8cc-ec4be14d8075",
+      "title": "Severe River Flash Flood",
+      "description": "Water rising near east bridge, 50 households evacuated",
+      "category": "Flood",
+      "severity": "High",
+      "status": "Reported",
+      "locationName": "East Bridge Delta",
+      "latitude": 19.076,
+      "longitude": 72.877,
+      "reporterId": "user-123",
+      "reporterName": "John Citizen",
+      "reporterContact": "guest@example.com",
+      "mediaUrls": [],
+      "createdAt": "2026-10-19T07:46:09.092Z",
+      "updatedAt": "2026-10-19T07:46:09.092Z",
+      "timeline": [
+        {
+          "timestamp": "2026-10-19T07:46:09.092Z",
+          "action": "Reported",
+          "actor": "John Citizen",
+          "notes": "Initial incident report submitted."
+        }
+      ]
     }
   },
   "disaster_sos": {
@@ -102,6 +252,96 @@
       "notes": "2 elderly citizens requiring stretcher assistance.",
       "createdAt": "2026-10-17T06:45:00.000Z",
       "updatedAt": "2026-10-17T07:15:00.000Z"
+    },
+    "cbf17721-84d1-4da9-8b93-9ec9f1ed5bc7": {
+      "sosId": "cbf17721-84d1-4da9-8b93-9ec9f1ed5bc7",
+      "requesterName": "Emergency Requester",
+      "requesterPhone": "+1-555-9988",
+      "emergencyType": "Trapped on rooftop due to floodwaters",
+      "urgency": "Critical",
+      "status": "Submitted",
+      "latitude": 0,
+      "longitude": 0,
+      "locationDescription": "45 Lakeview Apt, 3rd Floor",
+      "peopleCount": 4,
+      "notes": "",
+      "createdAt": "2026-10-18T20:23:51.588Z",
+      "updatedAt": "2026-10-18T20:23:51.588Z"
+    },
+    "6b906eb3-ceed-47dc-bef8-b4f03740875c": {
+      "sosId": "6b906eb3-ceed-47dc-bef8-b4f03740875c",
+      "requesterName": "Emergency Requester",
+      "requesterPhone": "+1-555-9988",
+      "emergencyType": "Trapped on rooftop due to floodwaters",
+      "urgency": "Critical",
+      "status": "Submitted",
+      "latitude": 0,
+      "longitude": 0,
+      "locationDescription": "45 Lakeview Apt, 3rd Floor",
+      "peopleCount": 4,
+      "notes": "",
+      "createdAt": "2026-10-18T20:38:22.471Z",
+      "updatedAt": "2026-10-18T20:38:22.471Z"
+    },
+    "3aae123f-19a4-4038-b137-b6c1e14192fe": {
+      "sosId": "3aae123f-19a4-4038-b137-b6c1e14192fe",
+      "requesterName": "Emergency Requester",
+      "requesterPhone": "+1-555-9988",
+      "emergencyType": "Trapped on rooftop due to floodwaters",
+      "urgency": "Critical",
+      "status": "Submitted",
+      "latitude": 0,
+      "longitude": 0,
+      "locationDescription": "45 Lakeview Apt, 3rd Floor",
+      "peopleCount": 4,
+      "notes": "",
+      "createdAt": "2026-10-18T20:45:41.146Z",
+      "updatedAt": "2026-10-18T20:45:41.146Z"
+    },
+    "7849203a-e6c6-4453-8789-5f0b20f38d01": {
+      "sosId": "7849203a-e6c6-4453-8789-5f0b20f38d01",
+      "requesterName": "Emergency Requester",
+      "requesterPhone": "+1-555-9988",
+      "emergencyType": "Trapped on rooftop due to floodwaters",
+      "urgency": "Critical",
+      "status": "Submitted",
+      "latitude": 0,
+      "longitude": 0,
+      "locationDescription": "45 Lakeview Apt, 3rd Floor",
+      "peopleCount": 4,
+      "notes": "",
+      "createdAt": "2026-10-18T20:46:26.006Z",
+      "updatedAt": "2026-10-18T20:46:26.006Z"
+    },
+    "3a6c0ab4-c727-4543-abfb-73932eacfc6e": {
+      "sosId": "3a6c0ab4-c727-4543-abfb-73932eacfc6e",
+      "requesterName": "Emergency Requester",
+      "requesterPhone": "+1-555-9988",
+      "emergencyType": "Trapped on rooftop due to floodwaters",
+      "urgency": "Critical",
+      "status": "Submitted",
+      "latitude": 0,
+      "longitude": 0,
+      "locationDescription": "45 Lakeview Apt, 3rd Floor",
+      "peopleCount": 4,
+      "notes": "",
+      "createdAt": "2026-10-18T20:54:39.481Z",
+      "updatedAt": "2026-10-18T20:54:39.481Z"
+    },
+    "19f72855-a79a-4551-963e-cdfd7554a4f6": {
+      "sosId": "19f72855-a79a-4551-963e-cdfd7554a4f6",
+      "requesterName": "Emergency Requester",
+      "requesterPhone": "+1-555-9988",
+      "emergencyType": "Trapped on rooftop due to floodwaters",
+      "urgency": "Critical",
+      "status": "Submitted",
+      "latitude": 0,
+      "longitude": 0,
+      "locationDescription": "45 Lakeview Apt, 3rd Floor",
+      "peopleCount": 4,
+      "notes": "",
+      "createdAt": "2026-10-19T07:46:09.125Z",
+      "updatedAt": "2026-10-19T07:46:09.125Z"
     }
   },
   "disaster_rescue_teams": {
@@ -211,20 +451,65 @@
     }
   },
   "disaster_alerts": {
-    "alert-001": {
-      "alertId": "alert-001",
-      "title": "RED ALERT: Severe Flash Floods & High Tide Advisory",
+    "alert-bom-2026-08": {
+      "alertId": "alert-bom-2026-08",
+      "title": "Red Alert: Extremely Heavy Downpour & High Tide Storm Surge Inundation",
+      "severity": "Critical",
+      "disasterType": "Waterlogging",
+      "affectedRegions": [
+        "Kurla West",
+        "Sion & Gandhi Market",
+        "Mithi River Corridor",
+        "Milan Subway",
+        "Hindmata Dadar"
+      ],
+      "instructions": "IMD Mumbai & BMC Disaster Control advisory: Citizens in ground-floor tenements along Kranti Nagar and low-lying railway belts are advised to move to designated BMC municipal schools. Do not drive through inundated underpasses.",
+      "issuedBy": "IMD Mumbai Regional Met Centre & BMC Disaster Control Room",
+      "issuedAt": "2026-10-18T20:00:00.000Z",
+      "active": true,
+      "snsMessageId": "sns-arn-disaster-broadcast-bom-001"
+    },
+    "22686688-7cf4-40e5-8e31-0f02001bf39b": {
+      "alertId": "22686688-7cf4-40e5-8e31-0f02001bf39b",
+      "title": "Monsoon High Tide Inundation Alert for Coastal Strip",
       "severity": "Critical",
       "affectedRegions": [
-        "North Delta Sector 3",
-        "Riverbank Corridor",
-        "Low-Lying Coastal Roads"
+        "Sector A",
+        "Sector B"
       ],
-      "instructions": "Evacuate ground level premises immediately. Do not attempt to cross flooded roadways. Proceed to Metro Sports Arena Shelter.",
-      "issuedBy": "Disaster Management Authority",
-      "issuedAt": "2026-10-17T05:30:00.000Z",
+      "instructions": "Immediate evacuation inland to elevated ground.",
+      "issuedBy": "Chief Controller (AUTHORITY)",
+      "issuedAt": "2026-10-18T20:46:26.038Z",
       "active": true,
-      "snsMessageId": "sns-arn-disaster-broadcast-001"
+      "snsMessageId": "mock-msg-1792356386038"
+    },
+    "7507f113-49f3-4787-85c7-ae0a195dbfa8": {
+      "alertId": "7507f113-49f3-4787-85c7-ae0a195dbfa8",
+      "title": "Monsoon High Tide Inundation Alert for Coastal Strip",
+      "severity": "Critical",
+      "affectedRegions": [
+        "Sector A",
+        "Sector B"
+      ],
+      "instructions": "Immediate evacuation inland to elevated ground.",
+      "issuedBy": "Chief Controller (AUTHORITY)",
+      "issuedAt": "2026-10-18T20:54:39.514Z",
+      "active": true,
+      "snsMessageId": "mock-msg-1792356879514"
+    },
+    "b2d977dc-9c54-44da-818d-b4df1ae75194": {
+      "alertId": "b2d977dc-9c54-44da-818d-b4df1ae75194",
+      "title": "Monsoon High Tide Inundation Alert for Coastal Strip",
+      "severity": "Critical",
+      "affectedRegions": [
+        "Sector A",
+        "Sector B"
+      ],
+      "instructions": "Immediate evacuation inland to elevated ground.",
+      "issuedBy": "Chief Controller (AUTHORITY)",
+      "issuedAt": "2026-10-19T07:46:09.149Z",
+      "active": true,
+      "snsMessageId": "mock-msg-1792395969149"
     }
   }
 }

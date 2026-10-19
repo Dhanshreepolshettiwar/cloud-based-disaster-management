@@ -4,7 +4,8 @@ version = 0.1
 [default.deploy.parameters]
 stack_name = "disaster-management-platform"
 s3_prefix = "disaster-management-platform"
-region = "us-east-1"
+region = "ap-south-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM"
+resolve_s3 = true
 image_repositories = []

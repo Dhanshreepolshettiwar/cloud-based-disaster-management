@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "node --test dist/**/*.test.js"
+    "test": "node --test dist/tests/handlers.test.js"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.712.0",

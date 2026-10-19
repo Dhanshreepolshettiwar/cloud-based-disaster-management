@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID as uuidv4 } from 'crypto';
 import { dynamoService } from '../utils/dynamo';
 import { extractAuthContext, requireRole, createApiResponse } from '../utils/auth';
 import { Incident, IncidentStatus, SeverityLevel, DisasterCategory } from '../types';
